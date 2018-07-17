@@ -1,16 +1,20 @@
 PODS:
   - Commander (0.8.0)
+  - PathKit (0.9.1)
 
 DEPENDENCIES:
   - Commander
+  - PathKit
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Commander
+    - PathKit
 
 SPEC CHECKSUMS:
   Commander: 6eda7635b133e239faa85bf75dcab88d6fd63aaa
+  PathKit: 7dcba9f0150afb67e0a520c49707a2cbc8e95937
 
-PODFILE CHECKSUM: 0264d565449545fdf900cc2f88aa5f12575135c5
+PODFILE CHECKSUM: 98e08c8159e17ec558d9ae77b1938a6f6bae769f
 
 COCOAPODS: 1.5.3

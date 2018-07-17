@@ -4,5 +4,6 @@ platform :macos, '10.10'
 target 'PhotoSorter' do
   # Pods for PhotoSorter
   pod 'Commander'
+  pod 'PathKit'
 
 end

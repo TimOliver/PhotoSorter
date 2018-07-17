@@ -8,12 +8,53 @@
 
 import Foundation
 import Commander
+import PathKit
 import ImageIO
+
+extension String: Error {}
 
 // MARK: - Sort -
 
 func sortPhotos(folders: [String], output: String) {
+    // Loop through each folder
+    for folder in folders {
+        let path = Path(folder).absolute().string
+        do { try sort(contentsOf: path, output: output) }
+        catch { print("\(error)")  }
+    }
+}
+
+func sort(contentsOf folder: String, output: String) throws {
+    // Print that we're starting
+    print("Scanning \(folder)... ", terminator: "")
     
+    let fileManager = FileManager.default
+    
+    // Get a list of all files in this directory
+    let files = try fileManager.contentsOfDirectory(atPath: folder)
+    guard files.count > 0 else {
+        throw "No files found."
+    }
+    
+    print("", terminator: "\n")
+    
+    for file in files {
+        // Skip hidden files
+        if file.prefix(1) == "." { continue }
+        
+        // Get absolute path of file
+        let filePath = (Path(folder) + Path(file)).string
+        
+        // Check if folder is a directory
+        var isDir: ObjCBool = false
+        if fileManager.fileExists(atPath: filePath, isDirectory: &isDir) && isDir.boolValue {
+            do { try sort(contentsOf: filePath, output: output) }
+            catch { print("\(error)") }
+            continue
+        }
+        
+        // See if file is a JPEG
+    }
 }
 
 // MARK: - Main -
