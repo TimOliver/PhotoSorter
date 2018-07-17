@@ -1,0 +1,16 @@
+PODS:
+  - Commander (0.8.0)
+
+DEPENDENCIES:
+  - Commander
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Commander
+
+SPEC CHECKSUMS:
+  Commander: 6eda7635b133e239faa85bf75dcab88d6fd63aaa
+
+PODFILE CHECKSUM: 0264d565449545fdf900cc2f88aa5f12575135c5
+
+COCOAPODS: 1.5.3
