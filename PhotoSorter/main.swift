@@ -43,17 +43,18 @@ func sort(contentsOf folder: String, output: String) throws {
         if file.prefix(1) == "." { continue }
         
         // Get absolute path of file
-        let filePath = (Path(folder) + Path(file)).string
+        let filePath = (Path(folder) + Path(file))
         
         // Check if folder is a directory
         var isDir: ObjCBool = false
-        if fileManager.fileExists(atPath: filePath, isDirectory: &isDir) && isDir.boolValue {
-            do { try sort(contentsOf: filePath, output: output) }
+        if fileManager.fileExists(atPath: filePath.string, isDirectory: &isDir) && isDir.boolValue {
+            do { try sort(contentsOf: filePath.string, output: output) }
             catch { print("\(error)") }
             continue
         }
         
         // See if file is a JPEG
+        
     }
 }
 
