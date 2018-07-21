@@ -10,7 +10,6 @@ import Foundation
 import Commander
 import PathKit
 import ImageIO
-import CommonCrypto
 
 // Extend String as an error so we can throw with error strings
 extension String: Error {}
@@ -21,6 +20,8 @@ let hashedFiles = [String]()
 // MARK: - Sort -
 
 func sortPhotos(folders: [String], output: String) {
+    print("Outputting to \(output)")
+    
     // Loop through each folder
     for folder in folders {
         let path = Path(folder).absolute().string
@@ -65,69 +66,122 @@ func sort(contentsOf folder: String, output: String) throws {
             print(" No file extension. Skipping.", terminator: "\n")
             continue
         }
-        guard fileExtension == "jpg" || fileExtension == "jpeg" || fileExtension == "png" else {
+        guard fileExtension == "jpg" || fileExtension == "jpeg" || fileExtension == "png" || fileExtension == "heic" || fileExtension == "dng" else {
             print(" Not a supported image. Skipping.", terminator: "\n")
             continue
         }
         
-        // File is an image
-        
-        //See if there is an accompanying MOV file
-        let movFilePath = filePath.string.prefix(filePath.string.count - fileExtension.count) + "mov"
-        
-        let fileURL = URL(fileURLWithPath: filePath.string)
-        if let imageSource = CGImageSourceCreateWithURL(fileURL as CFURL, nil) {
-            let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as? [String : AnyObject]
-            if let exifProperties = imageProperties?["{Exif}"] as? [String : AnyObject] {
-                print((exifProperties["DateTimeOriginal"] as! String))
-            }
+        // Check if we can open as an image
+        guard let imageSource = CGImageSourceCreateWithURL(filePath.url as CFURL, nil) else {
+            print(" Unable to load image data. Skipping.", terminator: "\n")
+            continue
+        }
+
+        // Load out the properties associated with this image
+        guard let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as? [String : AnyObject] else {
+            print(" Unable to access image properties. Skipping.", terminator: "\n")
+            continue
         }
         
-        print("", terminator: "\n")
+        // Extract the EXIF data
+        guard let exifProperties = imageProperties["{Exif}"] as? [String : AnyObject] else {
+            print(" No EXIF data. Skipping.", terminator: "\n")
+            continue
+        }
+        
+        // Extract the date time from the EXIF
+        guard let dateTime = exifProperties["DateTimeOriginal"] as? String else {
+            print(" No timestamp in EXIF data. Skipping.", terminator: "\n")
+            continue
+        }
+        
+        // The date format looks like 2014:09:29 08:36:47
+        
+        // Split up the string to capture the components
+        let dateTimeParts = dateTime.split(separator: ":")
+        guard dateTimeParts.count > 2 else {
+            print(" Date invalid. Skipping.", terminator: "\n")
+            continue
+        }
+        
+        // Get month and year
+        let year = dateTimeParts[0]
+        let month = dateTimeParts[1]
+        
+        // Make sure we actually got date data from it
+        guard Int(year) != nil && Int(month) != nil else {
+            print(" Can't find date data. Skipping.", terminator: "\n")
+            continue
+        }
+
+        // Create folder structer
+        let outputPath = Path(output) + Path(String(year)) + Path(String(month))
+        if !fileManager.fileExists(atPath: outputPath.string) {
+            try! fileManager.createDirectory(atPath: outputPath.string, withIntermediateDirectories: true, attributes: nil)
+        }
+        
+        var destinationPath = outputPath + Path(file)
+        var newFileName = String(file.split(separator: ".")[0])
+        
+        // Check if the file already exists there
+        if fileManager.fileExists(atPath: destinationPath.string) {
+            let sourceHash = md5(fileURL: filePath.url)
+            let destHash = md5(fileURL: destinationPath.url)
+            
+            if sourceHash == destHash {
+                print(" File already exists. Skipping.", terminator: "\n")
+                continue
+            }
+            
+            let pathExtension = destinationPath.url.pathExtension
+            
+            var i = 1
+            repeat {
+                newFileName = String(file.split(separator: ".")[0])
+                newFileName += "-\(i)"
+                i = i + 1
+                destinationPath = outputPath + Path(newFileName + ".\(pathExtension)")
+            } while fileManager.fileExists(atPath: destinationPath.string)
+        }
+        
+        print(" Copying...", terminator: "")
+        
+        //Copy the file over to the destination
+        try! fileManager.moveItem(at: filePath.url, to: destinationPath.url)
+        
+        //See if there is an accompanying MOV file (For Live Photos) we also need to move
+        let movieFileName = String(file.split(separator: ".")[0]) + ".mov"
+        let movieFilePath = Path(folder) + Path(movieFileName)
+        if fileManager.fileExists(atPath: movieFilePath.string) {
+            let newMovieFilePath = outputPath + (newFileName + ".mov")
+            try! fileManager.moveItem(at: movieFilePath.url, to: newMovieFilePath.url)
+        }
+        
+        //See if there is an accompanying AAE file (For metadata) we also need to move
+        let metaFileName = String(file.split(separator: ".")[0]) + ".aae"
+        let metaFilePath = Path(folder) + Path(metaFileName)
+        if fileManager.fileExists(atPath: metaFilePath.string) {
+            let newMetaFilePath = outputPath + (newFileName + ".aae")
+            try! fileManager.moveItem(at: metaFilePath.url, to: newMetaFilePath.url)
+        }
+        
+        print(" Done!", terminator: "\n")
     }
 }
 
-// https://stackoverflow.com/questions/42934154/how-can-i-hash-a-file-on-ios-using-swift-3
-func sha256(url: URL) -> String? {
-    do {
-        let bufferSize = 1024 * 1024
-        // Open file for reading:
-        let file = try FileHandle(forReadingFrom: url)
-        defer {
-            file.closeFile()
-        }
-        
-        // Create and initialize SHA256 context:
-        var context = CC_SHA256_CTX()
-        CC_SHA256_Init(&context)
-        
-        // Read up to `bufferSize` bytes, until EOF is reached, and update SHA256 context:
-        while autoreleasepool(invoking: {
-            // Read up to `bufferSize` bytes
-            let data = file.readData(ofLength: bufferSize)
-            if data.count > 0 {
-                data.withUnsafeBytes {
-                    _ = CC_SHA256_Update(&context, $0, numericCast(data.count))
-                }
-                // Continue
-                return true
-            } else {
-                // End of file
-                return false
-            }
-        }) { }
-        
-        // Compute the SHA256 digest:
-        var digest = Data(count: Int(CC_SHA256_DIGEST_LENGTH))
-        digest.withUnsafeMutableBytes {
-            _ = CC_SHA256_Final($0, &context)
-        }
-        
-        return digest.map { String(format: "%02hhx", $0) }.joined()
-    } catch {
-        print(error)
-        return nil
+// https://stackoverflow.com/questions/38097710/swift-3-changes-for-getbytes-method
+func md5(fileURL: URL) -> String {
+    
+    var digest = [UInt8](repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
+    let data = try! Data(contentsOf: fileURL)
+    CC_MD5([UInt8](data), CC_LONG(data.count), &digest)
+    
+    var digestHex = ""
+    for index in 0..<Int(CC_MD5_DIGEST_LENGTH) {
+        digestHex += String(format: "%02x", digest[index])
     }
+    
+    return digestHex
 }
 
 // MARK: - Main -
