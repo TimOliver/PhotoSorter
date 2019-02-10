@@ -66,53 +66,28 @@ func sort(contentsOf folder: String, output: String) throws {
             print(" No file extension. Skipping.", terminator: "\n")
             continue
         }
-        guard fileExtension == "jpg" || fileExtension == "jpeg" || fileExtension == "png" || fileExtension == "heic" || fileExtension == "dng" else {
-            print(" Not a supported image. Skipping.", terminator: "\n")
-            continue
-        }
-        
-        // Check if we can open as an image
-        guard let imageSource = CGImageSourceCreateWithURL(filePath.url as CFURL, nil) else {
-            print(" Unable to load image data. Skipping.", terminator: "\n")
+        guard fileExtension == "jpg" || fileExtension == "jpeg" || fileExtension == "png" || fileExtension == "heic" || fileExtension == "dng" || fileExtension == "gif" || fileExtension == "mov" || fileExtension == "mp4" else {
+            print(" Not a supported file. Skipping.", terminator: "\n")
             continue
         }
 
-        // Load out the properties associated with this image
-        guard let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as? [String : AnyObject] else {
-            print(" Unable to access image properties. Skipping.", terminator: "\n")
+        var dateTime: (year: String, month: String)?
+
+        // if it's a mov, just use the last modified date
+        if fileExtension == "mov" || fileExtension == "mp4" {
+            dateTime = dateTimeOfMovie(filePath: filePath)
+        }
+        else {
+            dateTime = dateTimeOfImage(filePath: filePath)
+        }
+
+        guard dateTime != nil else {
+            print(" Unable to find time. Skipping.", terminator: "\n")
             continue
         }
-        
-        // Extract the EXIF data
-        guard let exifProperties = imageProperties["{Exif}"] as? [String : AnyObject] else {
-            print(" No EXIF data. Skipping.", terminator: "\n")
-            continue
-        }
-        
-        // Extract the date time from the EXIF
-        guard let dateTime = exifProperties["DateTimeOriginal"] as? String else {
-            print(" No timestamp in EXIF data. Skipping.", terminator: "\n")
-            continue
-        }
-        
-        // The date format looks like 2014:09:29 08:36:47
-        
-        // Split up the string to capture the components
-        let dateTimeParts = dateTime.split(separator: ":")
-        guard dateTimeParts.count > 2 else {
-            print(" Date invalid. Skipping.", terminator: "\n")
-            continue
-        }
-        
-        // Get month and year
-        let year = dateTimeParts[0]
-        let month = dateTimeParts[1]
-        
-        // Make sure we actually got date data from it
-        guard Int(year) != nil && Int(month) != nil else {
-            print(" Can't find date data. Skipping.", terminator: "\n")
-            continue
-        }
+
+        let year = dateTime!.year
+        let month = dateTime!.month
 
         // Create folder structer
         let outputPath = Path(output) + Path(String(year)) + Path(String(month))
@@ -167,6 +142,68 @@ func sort(contentsOf folder: String, output: String) throws {
         
         print(" Done!", terminator: "\n")
     }
+}
+
+func dateTimeOfMovie(filePath: Path) -> (year: String, month: String)? {
+    let attributes = try! FileManager.default.attributesOfItem(atPath: filePath.string)
+    let modificationDate = attributes[.modificationDate] as? Date
+    if modificationDate == nil { return nil }
+
+    let dateComponents = NSCalendar.current.dateComponents([.month, .year], from: modificationDate!)
+    return (String(dateComponents.year!), String(format: "%02d", dateComponents.month!))
+}
+
+func dateTimeOfImage(filePath: Path) -> (year: String, month: String)? {
+    // Check if we can open as an image
+    guard let imageSource = CGImageSourceCreateWithURL(filePath.url as CFURL, nil) else {
+        print(" Unable to load image data. Skipping.", terminator: "\n")
+        return nil
+    }
+
+    // Load out the properties associated with this image
+    guard let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as? [String : AnyObject] else {
+        print(" Unable to access image properties. Skipping.", terminator: "\n")
+        return nil
+    }
+
+    // Extract the EXIF data
+    let exifProperties = imageProperties["{Exif}"] as? [String : AnyObject]
+
+    if exifProperties == nil || exifProperties?["DateTimeOriginal"] == nil {
+        let attributes = try! FileManager.default.attributesOfItem(atPath: filePath.string)
+        let modificationDate = attributes[.modificationDate] as? Date
+        if modificationDate == nil { return nil }
+
+        let dateComponents = NSCalendar.current.dateComponents([.month, .year], from: modificationDate!)
+        return (String(dateComponents.year!), String(format: "%02d", dateComponents.month!))
+    }
+
+    // Extract the date time from the EXIF
+    guard let dateTime = exifProperties?["DateTimeOriginal"] as? String else {
+        print(" No timestamp in EXIF data. Skipping.", terminator: "\n")
+        return nil
+    }
+
+    // The date format looks like 2014:09:29 08:36:47
+
+    // Split up the string to capture the components
+    let dateTimeParts = dateTime.split(separator: ":")
+    guard dateTimeParts.count > 2 else {
+        print(" Date invalid. Skipping.", terminator: "\n")
+        return nil
+    }
+
+    // Get month and year
+    let year = dateTimeParts[0]
+    let month = dateTimeParts[1]
+
+    // Make sure we actually got date data from it
+    guard Int(year) != nil && Int(month) != nil else {
+        print(" Can't find date data. Skipping.", terminator: "\n")
+        return nil
+    }
+
+    return (String(year), String(month))
 }
 
 // https://stackoverflow.com/questions/38097710/swift-3-changes-for-getbytes-method
