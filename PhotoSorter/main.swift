@@ -136,7 +136,7 @@ func sort(contentsOf folder: String, output: String) throws {
         let movieFilePath = Path(folder) + Path(movieFileName)
         if fileManager.fileExists(atPath: movieFilePath.string) {
             let newMovieFilePath = outputPath + (newFileName + ".mov")
-            try! fileManager.moveItem(at: movieFilePath.url, to: newMovieFilePath.url)
+            try? fileManager.moveItem(at: movieFilePath.url, to: newMovieFilePath.url)
         }
         
         //See if there is an accompanying AAE file (For metadata) we also need to move
@@ -144,7 +144,7 @@ func sort(contentsOf folder: String, output: String) throws {
         let metaFilePath = Path(folder) + Path(metaFileName)
         if fileManager.fileExists(atPath: metaFilePath.string) {
             let newMetaFilePath = outputPath + (newFileName + ".aae")
-            try! fileManager.moveItem(at: metaFilePath.url, to: newMetaFilePath.url)
+            try? fileManager.moveItem(at: metaFilePath.url, to: newMetaFilePath.url)
         }
         
         //See if there is an accompanying XMP file (For metadata) we also need to move
@@ -152,7 +152,7 @@ func sort(contentsOf folder: String, output: String) throws {
         let xmpFilePath = Path(folder) + Path(xmpFileName)
         if fileManager.fileExists(atPath: xmpFilePath.string) {
             let newXmpFilePath = outputPath + (newFileName + ".xmp")
-            try! fileManager.moveItem(at: xmpFilePath.url, to: newXmpFilePath.url)
+            try? fileManager.moveItem(at: xmpFilePath.url, to: newXmpFilePath.url)
         }
         
         print(" Done!", terminator: "\n")
