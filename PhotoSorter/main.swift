@@ -66,7 +66,14 @@ func sort(contentsOf folder: String, output: String) throws {
             print(" No file extension. Skipping.", terminator: "\n")
             continue
         }
-        guard fileExtension == "jpg" || fileExtension == "jpeg" || fileExtension == "png" || fileExtension == "heic" || fileExtension == "dng" || fileExtension == "gif" || fileExtension == "mov" || fileExtension == "mp4" else {
+        guard fileExtension == "jpg" ||
+            fileExtension == "jpeg" ||
+            fileExtension == "png" ||
+            fileExtension == "heic" ||
+            fileExtension == "dng" ||
+            fileExtension == "gif" ||
+            fileExtension == "mov" ||
+            fileExtension == "mp4" else {
             print(" Not a supported file. Skipping.", terminator: "\n")
             continue
         }
@@ -138,6 +145,14 @@ func sort(contentsOf folder: String, output: String) throws {
         if fileManager.fileExists(atPath: metaFilePath.string) {
             let newMetaFilePath = outputPath + (newFileName + ".aae")
             try! fileManager.moveItem(at: metaFilePath.url, to: newMetaFilePath.url)
+        }
+        
+        //See if there is an accompanying XMP file (For metadata) we also need to move
+        let xmpFileName = String(file.split(separator: ".")[0]) + ".xmp"
+        let xmpFilePath = Path(folder) + Path(xmpFileName)
+        if fileManager.fileExists(atPath: xmpFilePath.string) {
+            let newXmpFilePath = outputPath + (newFileName + ".xmp")
+            try! fileManager.moveItem(at: xmpFilePath.url, to: newXmpFilePath.url)
         }
         
         print(" Done!", terminator: "\n")
