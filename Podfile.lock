@@ -7,7 +7,7 @@ DEPENDENCIES:
   - PathKit
 
 SPEC REPOS:
-  https://cdn.cocoapods.org/:
+  trunk:
     - Commander
     - PathKit
 
@@ -17,4 +17,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 98e08c8159e17ec558d9ae77b1938a6f6bae769f
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.10.1

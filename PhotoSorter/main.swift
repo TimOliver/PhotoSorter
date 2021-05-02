@@ -160,7 +160,7 @@ func sort(contentsOf folder: String, output: String) throws {
 }
 
 func dateTimeOfMovie(filePath: Path) -> (year: String, month: String)? {
-    let attributes = try! FileManager.default.attributesOfItem(atPath: filePath.string)
+    guard let attributes = try? FileManager.default.attributesOfItem(atPath: filePath.string) else { return nil }
     let modificationDate = attributes[.modificationDate] as? Date
     if modificationDate == nil { return nil }
 
