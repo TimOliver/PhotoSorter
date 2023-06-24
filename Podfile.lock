@@ -1,6 +1,6 @@
 PODS:
-  - Commander (0.9.1)
-  - PathKit (1.0.0)
+  - Commander (0.9.2)
+  - PathKit (1.0.1)
 
 DEPENDENCIES:
   - Commander
@@ -12,9 +12,9 @@ SPEC REPOS:
     - PathKit
 
 SPEC CHECKSUMS:
-  Commander: 723330cf3697b604c00afb9db9576be81a03c501
-  PathKit: 364e0de7fb5adb142aecab4e112187e5548fc4b6
+  Commander: 0cfeb9c2c518d04ba8fb7253e4718eb3f8dbf995
+  PathKit: 83b97c9c61b62e61ecafd598b33b2782575c33e4
 
-PODFILE CHECKSUM: 98e08c8159e17ec558d9ae77b1938a6f6bae769f
+PODFILE CHECKSUM: 23692ab7be67ecc9d1c1a527030a4f029e0e5bff
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.12.1
