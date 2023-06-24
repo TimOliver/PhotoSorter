@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		222A710B20FE327F00F5C44B /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222A710A20FE327F00F5C44B /* main.swift */; };
-		2E9BE45AF883305AC70B1839 /* libPods-PhotoSorter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C92C77843DC46FBC4EE0B90 /* libPods-PhotoSorter.a */; };
+		FD2DF99DABD1232201C72DB3 /* libPods-PhotoSorter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6112C2AE468A03DED02FA6C8 /* libPods-PhotoSorter.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -24,12 +24,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1C92C77843DC46FBC4EE0B90 /* libPods-PhotoSorter.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PhotoSorter.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		222A710720FE327F00F5C44B /* PhotoSorter */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PhotoSorter; sourceTree = BUILT_PRODUCTS_DIR; };
 		222A710A20FE327F00F5C44B /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		22BF8CBE2A46A1AD00CCE772 /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
 		22D7A7FB21022DE700009CF7 /* PhotoSorter-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "PhotoSorter-Bridging-Header.h"; path = "/Users/TiM/Projects/PhotoSorter/PhotoSorter/PhotoSorter-Bridging-Header.h"; sourceTree = "<absolute>"; };
-		301642F697789BD2A247F260 /* Pods-PhotoSorter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotoSorter.release.xcconfig"; path = "Pods/Target Support Files/Pods-PhotoSorter/Pods-PhotoSorter.release.xcconfig"; sourceTree = "<group>"; };
-		B5B03E05EE4C481EF4A6A802 /* Pods-PhotoSorter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotoSorter.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PhotoSorter/Pods-PhotoSorter.debug.xcconfig"; sourceTree = "<group>"; };
+		6112C2AE468A03DED02FA6C8 /* libPods-PhotoSorter.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PhotoSorter.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		87A5F3BC90A1C8E872521D15 /* Pods-PhotoSorter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotoSorter.debug.xcconfig"; path = "Target Support Files/Pods-PhotoSorter/Pods-PhotoSorter.debug.xcconfig"; sourceTree = "<group>"; };
+		87ADBCB41B5390C689FB9C42 /* Pods-PhotoSorter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotoSorter.release.xcconfig"; path = "Target Support Files/Pods-PhotoSorter/Pods-PhotoSorter.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,20 +38,29 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2E9BE45AF883305AC70B1839 /* libPods-PhotoSorter.a in Frameworks */,
+				FD2DF99DABD1232201C72DB3 /* libPods-PhotoSorter.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		13B8A92F9829CADC881A4B3D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6112C2AE468A03DED02FA6C8 /* libPods-PhotoSorter.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		222A70FE20FE327E00F5C44B = {
 			isa = PBXGroup;
 			children = (
+				22BF8CBE2A46A1AD00CCE772 /* Podfile */,
 				222A710920FE327F00F5C44B /* PhotoSorter */,
 				222A710820FE327F00F5C44B /* Products */,
-				AFB2ABB521063AFFB209C5A2 /* Pods */,
-				4385E5C714D245644C4A6263 /* Frameworks */,
+				AE2EEFD26D6089F09C735E55 /* Pods */,
+				13B8A92F9829CADC881A4B3D /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -71,21 +81,13 @@
 			path = PhotoSorter;
 			sourceTree = "<group>";
 		};
-		4385E5C714D245644C4A6263 /* Frameworks */ = {
+		AE2EEFD26D6089F09C735E55 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				1C92C77843DC46FBC4EE0B90 /* libPods-PhotoSorter.a */,
+				87A5F3BC90A1C8E872521D15 /* Pods-PhotoSorter.debug.xcconfig */,
+				87ADBCB41B5390C689FB9C42 /* Pods-PhotoSorter.release.xcconfig */,
 			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		AFB2ABB521063AFFB209C5A2 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				B5B03E05EE4C481EF4A6A802 /* Pods-PhotoSorter.debug.xcconfig */,
-				301642F697789BD2A247F260 /* Pods-PhotoSorter.release.xcconfig */,
-			);
-			name = Pods;
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -95,7 +97,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 222A710E20FE327F00F5C44B /* Build configuration list for PBXNativeTarget "PhotoSorter" */;
 			buildPhases = (
-				4485410F5DD3A429AC47A8EE /* [CP] Check Pods Manifest.lock */,
+				A7D6E59D5087A040D5D9E79F /* [CP] Check Pods Manifest.lock */,
 				222A710320FE327F00F5C44B /* Sources */,
 				222A710420FE327F00F5C44B /* Frameworks */,
 				222A710520FE327F00F5C44B /* CopyFiles */,
@@ -144,16 +146,20 @@
 /* End PBXProject section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4485410F5DD3A429AC47A8EE /* [CP] Check Pods Manifest.lock */ = {
+		A7D6E59D5087A040D5D9E79F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			inputFileListPaths = (
 			);
 			inputPaths = (
 				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
 				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-PhotoSorter-checkManifestLockResult.txt",
 			);
@@ -297,7 +303,7 @@
 		};
 		222A710F20FE327F00F5C44B /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B5B03E05EE4C481EF4A6A802 /* Pods-PhotoSorter.debug.xcconfig */;
+			baseConfigurationReference = 87A5F3BC90A1C8E872521D15 /* Pods-PhotoSorter.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
@@ -319,7 +325,7 @@
 		};
 		222A711020FE327F00F5C44B /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 301642F697789BD2A247F260 /* Pods-PhotoSorter.release.xcconfig */;
+			baseConfigurationReference = 87ADBCB41B5390C689FB9C42 /* Pods-PhotoSorter.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
